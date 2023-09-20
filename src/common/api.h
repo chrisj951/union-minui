@@ -147,9 +147,9 @@ void SND_quit(void);
 enum {
 	BTN_ID_NONE = -1,
 	BTN_ID_UP,
+	BTN_ID_RIGHT,
 	BTN_ID_DOWN,
 	BTN_ID_LEFT,
-	BTN_ID_RIGHT,
 	BTN_ID_A,
 	BTN_ID_B,
 	BTN_ID_X,
@@ -170,9 +170,9 @@ enum {
 enum {
 	BTN_NONE	= 0,
 	BTN_UP 		= 1 << BTN_ID_UP,
+	BTN_RIGHT	= 1 << BTN_ID_RIGHT,
 	BTN_DOWN	= 1 << BTN_ID_DOWN,
 	BTN_LEFT	= 1 << BTN_ID_LEFT,
-	BTN_RIGHT	= 1 << BTN_ID_RIGHT,
 	BTN_A		= 1 << BTN_ID_A,
 	BTN_B		= 1 << BTN_ID_B,
 	BTN_X		= 1 << BTN_ID_X,

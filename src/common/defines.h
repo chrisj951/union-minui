@@ -20,6 +20,26 @@
 #define CODE_MINUS		0x6D
 #define CODE_POWER		0x74
 
+#define JOY_A         0
+#define JOY_B         1
+#define JOY_X         2
+#define JOY_Y         3
+#define JOY_POWER     4
+#define JOY_L1        5
+#define JOY_R1        6
+#define JOY_SELECT    7
+#define JOY_START     8
+#define JOY_MENU      9
+#define JOY_PLUS      10
+#define JOY_MINUS     11
+#define JOY_L2        2
+#define JOY_R2        5
+#define JOY_UP        0x01
+#define JOY_RIGHT     0x02
+#define JOY_DOWN      0x04
+#define JOY_LEFT      0x08
+
+
 #define	BUTTON_UP		SDLK_KATAKANA
 #define	BUTTON_RIGHT	SDLK_KATAKANAHIRAGANA
 #define	BUTTON_DOWN		SDLK_HIRAGANA

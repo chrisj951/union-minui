@@ -365,9 +365,13 @@ static struct POW_Context {
 ///////////////////////////////
 
 static int _;
+SDL_Joystick *joystick;
 
 SDL_Surface* GFX_init(int mode) {
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK);
+  SDL_JoystickEventState(SDL_ENABLE);
+  joystick = SDL_JoystickOpen(0);
+
 	SDL_ShowCursor(0);
 	SDL_SetVideoMode(0,0,FIXED_DEPTH,0);
 	
@@ -1211,6 +1215,40 @@ void PAD_poll(void) {
 	while (SDL_PollEvent(&event)) {
 		int btn = BTN_NONE;
 		int id = -1;
+		if (event.type==SDL_JOYBUTTONDOWN || event.type==SDL_JOYBUTTONUP) {
+      uint16_t code = event.jbutton.button;
+      if      (code==JOY_A)       { btn = BTN_A;      id = BTN_ID_A; }
+      else if (code==JOY_B)       { btn = BTN_B;      id = BTN_ID_B; }
+      else if (code==JOY_X)       { btn = BTN_X;      id = BTN_ID_X; }
+      else if (code==JOY_Y)       { btn = BTN_Y;      id = BTN_ID_Y; }
+      else if (code==JOY_START)   { btn = BTN_START;  id = BTN_ID_START; }
+      else if (code==JOY_SELECT)  { btn = BTN_SELECT; id = BTN_ID_SELECT; }
+      else if (code==JOY_MENU)    { btn = BTN_MENU;   id = BTN_ID_MENU; }
+      else if (code==JOY_L1)      { btn = BTN_L1;     id = BTN_ID_L1; }
+      else if (code==JOY_R1)      { btn = BTN_R1;     id = BTN_ID_R1; }
+      else if (code==JOY_PLUS)    { btn = BTN_PLUS;   id = BTN_ID_PLUS; }
+      else if (code==JOY_MINUS)   { btn = BTN_MINUS;  id = BTN_ID_MINUS; }
+    }
+    else if (event.type==SDL_JOYHATMOTION) {
+      btn = event.jhat.value;
+      pad.just_released = (pad.is_pressed ^ btn) & pad.is_pressed & 0xF;
+      pad.just_pressed = (pad.is_pressed ^ btn) & btn;
+      pad.just_repeated &= ~pad.just_released; // any pad that was just released should not have just repeated
+      pad.is_pressed &= ~0xF;
+      pad.is_pressed |= btn;
+
+      for (int i = 0; i < 3; i++) {
+        if ((pad.just_pressed >> i) & 1) {
+          pad.just_repeated |= 1 << i;// because the directions always query repeated???
+          pad.repeat_at[i] = tick + PAD_REPEAT_DELAY;
+        }
+      }
+    }
+    else if (event.type==SDL_JOYAXISMOTION) {
+      uint16_t code = event.jaxis.axis;
+      if      (code==JOY_L2) { btn = BTN_L2; id = BTN_ID_L2; }
+      else if (code==JOY_R2) { btn = BTN_R2; id = BTN_ID_R2; }
+    }
 		if (event.type==SDL_KEYDOWN || event.type==SDL_KEYUP) {
 			uint8_t code = event.key.keysym.scancode;
 				 if (code==CODE_UP) 	{ btn = BTN_UP; 		id = BTN_ID_UP; }
@@ -1233,14 +1271,14 @@ void PAD_poll(void) {
 			else if (code==CODE_POWER)	{ btn = BTN_POWER; 		id = BTN_ID_POWER; }
 		}
 		
-		if (btn==BTN_NONE) continue;
+		if (btn==BTN_NONE || event.type == SDL_JOYHATMOTION) continue;
 		
-		if (event.type==SDL_KEYUP) {
+		if (event.type==SDL_KEYUP || event.type==SDL_JOYBUTTONUP || (event.type==SDL_JOYAXISMOTION && event.jaxis.value < 0)) {
 			pad.is_pressed		&= ~btn; // unset
 			pad.just_repeated	&= ~btn; // unset
 			pad.just_released	|= btn; // set
 		}
-		else if ((pad.is_pressed & btn)==BTN_NONE) {
+		else if ((pad.is_pressed & (btn & 0xFFF0))==BTN_NONE) {
 			pad.just_pressed	|= btn; // set
 			pad.just_repeated	|= btn; // set
 			pad.is_pressed		|= btn; // set

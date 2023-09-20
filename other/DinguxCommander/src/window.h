@@ -34,12 +34,12 @@ class CWindow
     virtual const bool keyHold(void);
 
     // Timer tick
-    const bool tick(const Uint8 p_held);
+    const bool tick(const unsigned int p_held);
 
     // Timer for key hold
     unsigned int m_timer;
 #if defined(PLATFORM_RG35XX)
-    uint8_t m_lastPressed;
+    unsigned int m_lastPressed;
 #else
     SDLKey m_lastPressed;
 #endif

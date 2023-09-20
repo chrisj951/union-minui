@@ -67,6 +67,10 @@ namespace Globals
     extern const SDL_Color g_colorTextSelected;
     // The list of opened windows
     extern std::vector<CWindow *> g_windows;
+    extern SDL_Joystick *joy;
+    extern int joyhat;
+    extern const int hat2key[4];
+    extern const int btn2key[12];
 }
 
 #if defined(PLATFORM_MIYOOMINI) || defined(PLATFORM_RG35XX)
