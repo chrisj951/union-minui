@@ -1107,21 +1107,45 @@ static void SND_selectResampler(void) { // plat_sound_select_resampler
 		snd.resample = SND_resampleNear;
 	}
 }
-size_t SND_batchSamples(const SND_Frame* frames, size_t frame_count) { // plat_sound_write / plat_sound_write_resample
+size_t SND_batchSamples(const SND_Frame* frames, size_t frame_count, int fast_forward) { // plat_sound_write / plat_sound_write_resample
 	if (snd.frame_count==0) return 0;
 	
 	SDL_LockAudio();
 
 	int consumed = 0;
-	while (frame_count > 0) {
-		int tries = 0;
-		int amount = MIN(BATCH_SIZE, frame_count);
 
-		snd.resample(*frames);
-		frames += 1;
-		amount -= 1;
-		frame_count -= 1;
+	if(fast_forward){
+		while (frame_count > 0) {
+			int tries = 0;
+			int amount = MIN(BATCH_SIZE, frame_count);
+
+			snd.resample(*frames);
+			frames += 1;
+			amount -= 1;
+			frame_count -= 1;
+		}
+	} else {
+
+		while (frame_count > 0) {
+			int tries = 0;
+			int amount = MIN(BATCH_SIZE, frame_count);
+
+			while (tries < 10 && snd.frame_in==snd.frame_filled) {
+				tries++;
+				SDL_UnlockAudio();
+				SDL_Delay(1);
+				SDL_LockAudio();
+			}
+
+			while (amount && snd.frame_in != snd.frame_filled) {
+				consumed = snd.resample(*frames);
+				frames += consumed;
+				amount -= consumed;
+				frame_count -= consumed;
+			}
+		}
 	}
+	
 	SDL_UnlockAudio();
 	
 	return consumed;

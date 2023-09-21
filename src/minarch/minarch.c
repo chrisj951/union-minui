@@ -2829,10 +2829,10 @@ static void video_refresh_callback(const void *data, unsigned width, unsigned he
 ///////////////////////////////
 
 static void audio_sample_callback(int16_t left, int16_t right) {
-	if(enable_sound_on_ff || !fast_forward) SND_batchSamples(&(const SND_Frame){left,right}, 1);
+	if(enable_sound_on_ff || !fast_forward) SND_batchSamples(&(const SND_Frame){left,right}, 1, fast_forward);
 }
 static size_t audio_sample_batch_callback(const int16_t *data, size_t frames) { 
-	if(enable_sound_on_ff || !fast_forward) SND_batchSamples((const SND_Frame*)data, frames);
+	if(enable_sound_on_ff || !fast_forward) SND_batchSamples((const SND_Frame*)data, frames, fast_forward);
 	else return frames;
 };
 
