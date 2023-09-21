@@ -1604,7 +1604,7 @@ static void POW_waitForWake(void) {
 			}
 		}
 		SDL_Delay(200);
-		if (pow.can_poweroff && SDL_GetTicks()-sleep_ticks>=120000) { // increased to two minutes
+		if (pow.can_poweroff && SDL_GetTicks()-sleep_ticks>=6000000) { // increased to ten minutes
 			if (pow.is_charging) sleep_ticks += 60000; // check again in a minute
 			else POW_powerOff(); // TODO: not working...
 		}
