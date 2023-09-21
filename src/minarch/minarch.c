@@ -37,6 +37,7 @@ enum {
 static int screen_scaling = SCALE_ASPECT; // aspect
 static int show_scanlines = 0;
 static int optimize_text = 0;
+static int enable_sound = 1;
 static int prevent_tearing = 1; // lenient
 static int show_debug = 0;
 static int max_ff_speed = 3; // 4x
@@ -575,6 +576,7 @@ enum {
 	FE_OPT_SCALING,
 	FE_OPT_SCANLINES,
 	FE_OPT_TEXT,
+	FE_OPT_ENABLE_SOUND,
 	FE_OPT_TEARING,
 	FE_OPT_OVERCLOCK,
 	FE_OPT_DEBUG,
@@ -771,6 +773,16 @@ static struct Config {
 				.values = onoff_labels,
 				.labels = onoff_labels,
 			},
+			[FE_OPT_ENABLE_SOUND] = {
+				.key	= "minarch_enable_sound", 
+				.name	= "Enable Sound",
+				.desc	= "Enable or disable sound",
+				.default_value = 1,
+				.value = 1,
+				.count = 2,
+				.values = onoff_labels,
+				.labels = onoff_labels,
+			},
 			[FE_OPT_TEARING] = {
 				.key	= "minarch_prevent_tearing",
 				.name	= "Prevent Tearing",
@@ -865,6 +877,7 @@ static void Config_syncFrontend(int i, int value) {
 		case FE_OPT_SCALING:	screen_scaling 	= value; renderer.src_w = 0; break;
 		case FE_OPT_SCANLINES:	show_scanlines 	= value; renderer.src_w = 0; break;
 		case FE_OPT_TEXT:		optimize_text 	= value; renderer.src_w = 0; break;
+		case FE_OPT_ENABLE_SOUND: enable_sound = value; break;
 		case FE_OPT_TEARING:	prevent_tearing = value; break;
 		case FE_OPT_OVERCLOCK:	overclock		= value; break;
 		case FE_OPT_DEBUG:		show_debug 		= value; break;
@@ -2817,10 +2830,11 @@ static void video_refresh_callback(const void *data, unsigned width, unsigned he
 
 // NOTE: sound must be disabled for fast forward to work...
 static void audio_sample_callback(int16_t left, int16_t right) {
-	SND_batchSamples(&(const SND_Frame){left,right}, 1);
+	if(enable_sound ) SND_batchSamples(&(const SND_Frame){left,right}, 1);
 }
 static size_t audio_sample_batch_callback(const int16_t *data, size_t frames) { 
-	return SND_batchSamples((const SND_Frame*)data, frames);
+	if(enable_sound) SND_batchSamples((const SND_Frame*)data, frames);
+	else return frames;
 };
 
 ///////////////////////////////////////
