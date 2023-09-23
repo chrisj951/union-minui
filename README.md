@@ -46,6 +46,13 @@ on top of MinUI.
 - Native macOS installation instructions
 - Developer experience improvements
 
+### Additional Fork features
+-	10 minute auto-shutdown instead of 2 minuntes
+-	Sound when fast forwarding (option in frontend menu to disable)
+-	Pico 8 support
+-	Increased saturation/contrast (using xonglebongle's build)
+-	Don't disable fast-forward  when opening the menu
+
 ## Development
 
 ### Prerequisites
