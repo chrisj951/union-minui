@@ -25,9 +25,7 @@ index 927ea8d4b8d1658a1d7521fe7e9abcbdede0ba5f..55fdd37925b26ac362ab2ad99c0739a4
 --- forkSrcPrefix/platform/libretro/libretro.cpp
 +++ forkDstPrefix/platform/libretro/libretro.cpp
 @@ -504,6 +504,7 @@ EXPORT bool retro_load_game(struct retro_game_info const *info)
-     }
- 
+
 +	_vm->UpdateAndDraw();
      return true;
  }
- 
