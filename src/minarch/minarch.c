@@ -3860,7 +3860,7 @@ static void Menu_loop(void) {
 	int rumble_strength = VIB_getStrength();
 	VIB_setStrength(0);
 	
-	fast_forward = 0;
+	//fast_forward = 0;
 	POW_enableAutosleep();
 	PAD_reset();
 	
