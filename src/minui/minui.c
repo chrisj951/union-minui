@@ -112,6 +112,7 @@ enum EntryType {
 };
 typedef struct Entry {
 	char* path;
+	char* boxart;
 	char* name;
 	char* unique;
 	int type;
@@ -127,6 +128,18 @@ static Entry* Entry_new(char* path, int type) {
 	self->unique = NULL;
 	self->type = type;
 	self->alpha = 0;
+	
+	if(strrchr(path, '/'))
+	{
+        char images_folder[256];
+		sprintf(images_folder, "%s", path);
+		strrchr(images_folder, '/')[0] = '\0';
+		sprintf(images_folder, "%s%s", images_folder,"/images/");
+		char art[256];
+		sprintf(art, "%s%s%s", images_folder,display_name,".png");
+		self->boxart = strdup(art);
+	}
+
 	return self;
 }
 static void Entry_free(Entry* self) {
@@ -857,8 +870,10 @@ static void addEntries(Array* entries, char* path) {
 		char full_path[256];
 		sprintf(full_path, "%s/", path);
 		tmp = full_path + strlen(full_path);
+		
 		while((dp = readdir(dh)) != NULL) {
-			if (hide(dp->d_name)) continue;
+
+			if (hide(dp->d_name) || 0 == strcmp("images",dp->d_name)) continue;
 			strcpy(tmp, dp->d_name);
 			int is_dir = dp->d_type==DT_DIR;
 			int type;
@@ -880,7 +895,9 @@ static void addEntries(Array* entries, char* path) {
 				}
 			}
 			Array_push(entries, Entry_new(full_path, type));
+		
 		}
+		
 		closedir(dh);
 	}
 }
@@ -1280,6 +1297,7 @@ static void Menu_quit(void) {
 }
 
 ///////////////////////////////////////
+SDL_Surface* boxart = NULL;
 
 int main (int argc, char *argv[]) {
 	if (autoResume()) return 0; // nothing to do
@@ -1532,6 +1550,31 @@ int main (int argc, char *argv[]) {
 				// list
 				if (total>0) {
 					int selected_row = top->selected - top->start;
+					
+					Entry* boxArtEntry = top->entries->items[top->selected];
+
+					if(NULL != boxart){
+						SDL_FreeSurface(boxart);
+						boxart = NULL;
+					}
+							
+					if(boxArtEntry->boxart){
+						SDL_Surface* boxart = IMG_Load(boxArtEntry->boxart);	
+						if(boxart){							
+							SDL_BlitSurface(
+								boxart, 
+								NULL, 
+								screen, 
+								&(SDL_Rect){
+									320,
+									80
+								}
+							);
+							
+						} 
+					}
+
+					
 					for (int i=top->start,j=0; i<top->end; i++,j++) {
 						Entry* entry = top->entries->items[i];
 						char* entry_name = entry->name;
@@ -1547,13 +1590,14 @@ int main (int argc, char *argv[]) {
 						trimSortingMeta(&entry_name);
 					
 						char display_name[256];
-						int text_width = GFX_truncateText(font.large, entry_unique ? entry_unique : entry_name, display_name, available_width, SCALE1(BUTTON_PADDING*2));
+						int text_width = GFX_truncateText(font.small, entry_unique ? entry_unique : entry_name, display_name, available_width, SCALE1(BUTTON_PADDING*2));
 						int max_width = MIN(available_width, text_width);
 						if (j==selected_row) {
+
 							GFX_blitPill(ASSET_WHITE_PILL, screen, &(SDL_Rect){
-								SCALE1(PADDING),
+								0,
 								SCALE1(PADDING+(j*PILL_SIZE)),
-								max_width,
+								max_width - 37,
 								SCALE1(PILL_SIZE)
 							});
 							text_color = COLOR_BLACK;
@@ -1564,36 +1608,36 @@ int main (int argc, char *argv[]) {
 						else if (entry->unique) {
 							trimSortingMeta(&entry_unique);
 							char unique_name[256];
-							GFX_truncateText(font.large, entry_unique, unique_name, available_width, SCALE1(BUTTON_PADDING*2));
+							GFX_truncateText(font.small, entry_unique, unique_name, available_width, SCALE1(BUTTON_PADDING*2));
 						
-							SDL_Surface* text = TTF_RenderUTF8_Blended(font.large, unique_name, COLOR_DARK_TEXT);
+							SDL_Surface* text = TTF_RenderUTF8_Blended(font.small, unique_name, COLOR_DARK_TEXT);
 							SDL_BlitSurface(text, &(SDL_Rect){
 								0,
 								0,
 								max_width-SCALE1(BUTTON_PADDING*2),
 								text->h
 							}, screen, &(SDL_Rect){
-								SCALE1(PADDING+BUTTON_PADDING),
+								5,
 								SCALE1(PADDING+(j*PILL_SIZE)+4)
 							});
 						
-							GFX_truncateText(font.large, entry_name, display_name, available_width, SCALE1(BUTTON_PADDING*2));
+							GFX_truncateText(font.small, entry_name, display_name, available_width, SCALE1(BUTTON_PADDING*2));
 						}
-						SDL_Surface* text = TTF_RenderUTF8_Blended(font.large, display_name, text_color);
+						SDL_Surface* text = TTF_RenderUTF8_Blended(font.small, display_name, text_color);
 						SDL_BlitSurface(text, &(SDL_Rect){
 							0,
 							0,
 							max_width-SCALE1(BUTTON_PADDING*2),
 							text->h
 						}, screen, &(SDL_Rect){
-							SCALE1(PADDING+BUTTON_PADDING),
+							5,
 							SCALE1(PADDING+(j*PILL_SIZE)+4)
 						});
 						SDL_FreeSurface(text);
 					}
 				}
 				else {
-					GFX_blitMessage(font.large, "Empty folder", screen, NULL);
+					GFX_blitMessage(font.small, "Empty folder", screen, NULL);
 				}
 			
 				// buttons

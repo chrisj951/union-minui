@@ -658,7 +658,7 @@ void GFX_blitPill(int asset, SDL_Surface* dst, SDL_Rect* dst_rect) {
 	if (h==0) h = asset_rects[asset].h;
 	
 	int r = h / 2;
-	if (w < h) w = h;
+	//if (w < h) w = h;
 	w -= h;
 	
 	GFX_blitAsset(asset, &(SDL_Rect){0,0,r,h}, dst, &(SDL_Rect){x,y});

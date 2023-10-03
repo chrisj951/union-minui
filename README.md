@@ -52,6 +52,12 @@ on top of MinUI.
 -	Pico 8 support
 -	Increased saturation/contrast (using xonglebongle's build)
 -	Don't disable fast-forward  when opening the menu
+- 	Boxart in the game selection menus
+	-	Smaller text/margins to support
+	-	Does not currently auto-scale the image
+		(The correct size must be used, 280x280 being ideal
+		in my testing)
+	-	Images go into ROMS/<console>/images/<game name>.png
 
 ## Development
 
