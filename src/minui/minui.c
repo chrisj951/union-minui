@@ -1182,6 +1182,7 @@ static void closeDirectory(void) {
 
 static void Entry_open(Entry* self) {
 	if (self->type==ENTRY_ROM) {
+		POW_setCPUSpeed(CPU_SPEED_PERFORMANCE); //Set for NDS only in the future
 		char *last = NULL;
 		if (prefixMatch(COLLECTIONS_PATH, top->path)) {
 			char* tmp;
