@@ -235,7 +235,7 @@ int POW_readBatteryStatus(void);
 #define CPU_SPEED_MENU			 504000 // 500 MHz
 #define CPU_SPEED_POWERSAVE 	720000 // 720 MHz
 #define CPU_SPEED_NORMAL 		1008000 // 1.0 GHz
-#define CPU_SPEED_PERFORMANCE	1296000 // 1.3 GHz
+#define CPU_SPEED_PERFORMANCE	1536000 // 1.5 Ghz 1296000 // 1.3 GHz
 // Reference overclock.c
 void POW_setCPUSpeed(int speed);
 
