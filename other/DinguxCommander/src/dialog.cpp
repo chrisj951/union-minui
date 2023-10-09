@@ -152,7 +152,22 @@ const bool CDialog::keyPress(const SDL_Event &p_event)
 {
     CWindow::keyPress(p_event);
     bool l_ret(false);
-	switch (p_event.key.keysym.sym)
+    int keystate = -1;
+    if (p_event.type == SDL_JOYHATMOTION) {
+      for (int i = 0; i < 4; i++) {
+        if (p_event.jhat.value & (1 << i) && (~Globals::joyhat & (1 << i))) {
+          keystate = Globals::hat2key[i];
+        }
+      }
+      Globals::joyhat = p_event.jhat.value;
+    }
+    else if (p_event.type==SDL_JOYBUTTONDOWN) {
+      keystate = Globals::btn2key[p_event.jbutton.button];
+    }
+    else if (p_event.type == SDL_KEYDOWN) {
+      keystate = p_event.key.keysym.sym;
+    }
+	switch (keystate)
     {
         case MYKEY_PARENT:
             m_retVal = -1;
@@ -223,6 +238,12 @@ const bool CDialog::moveCursorDown(const bool p_loop)
 const bool CDialog::keyHold(void)
 {
     bool l_ret(false);
+    if ((Globals::joyhat & 1) && tick(SDL_JoystickGetHat(Globals::joy,0) & SDL_HAT_UP)) {
+      l_ret = moveCursorUp(false);
+    }
+    if ((Globals::joyhat & 4) && tick(SDL_JoystickGetHat(Globals::joy,0) & SDL_HAT_DOWN)) {
+      l_ret = moveCursorDown(false);
+    }
     switch(m_lastPressed)
     {
         case MYKEY_UP:

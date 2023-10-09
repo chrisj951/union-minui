@@ -39,7 +39,7 @@ const int CWindow::execute(void)
         // Handle key press
         while (SDL_PollEvent(&l_event))
         {
-            if (l_event.type == SDL_KEYDOWN)
+            if (l_event.type == SDL_KEYDOWN || l_event.type == SDL_JOYHATMOTION || l_event.type == SDL_JOYBUTTONDOWN)
             {
                 l_render = this->keyPress(l_event);
                 if (m_retVal)
@@ -82,7 +82,12 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
     if (m_timer)
         m_timer = 0;
 #if defined(PLATFORM_RG35XX)
-    m_lastPressed = p_event.key.keysym.scancode;
+    if (p_event.type == SDL_KEYDOWN) {
+      m_lastPressed = p_event.key.keysym.scancode;
+    }
+    else if (p_event.type == SDL_JOYBUTTONDOWN) {
+      m_lastPressed = Globals::btn2key[p_event.jbutton.button];
+    }
 #else
 	m_lastPressed = p_event.key.keysym.sym;
 #endif
@@ -95,7 +100,7 @@ const bool CWindow::keyHold(void)
     return false;
 }
 
-const bool CWindow::tick(const Uint8 p_held)
+const bool CWindow::tick(const unsigned int p_held)
 {
     bool l_ret(false);
     if (p_held)

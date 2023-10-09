@@ -109,16 +109,19 @@ int main (int argc, char *argv[]) {
 				val = ev.value;
 				if (( ev.type != EV_KEY ) || ( val > REPEAT )) continue;
 				switch (ev.code) {
+          case 316:
 					case CODE_MENU:
 						menu_pressed = val;
 					break;
 					case CODE_POWER:
 						power_pressed = val;
 					break;
+          case 317:
 					case CODE_PLUS:
 						up_pressed = up_just_pressed = val;
 						if (val) up_repeat_at = now + 300;
 					break;
+          case 318:
 					case CODE_MINUS:
 						down_pressed = down_just_pressed = val;
 						if (val) down_repeat_at = now + 300;

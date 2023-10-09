@@ -194,7 +194,22 @@ const bool CKeyboard::keyPress(const SDL_Event &p_event)
 {
     CWindow::keyPress(p_event);
     bool l_ret(false);
-	switch (p_event.key.keysym.sym)
+    int keystate = -1;
+    if (p_event.type == SDL_JOYHATMOTION) {
+      for (int i = 0; i < 4; i++) {
+        if (p_event.jhat.value & (1 << i) && (~Globals::joyhat & (1 << i))) {
+          keystate = Globals::hat2key[i];
+        }
+      }
+      Globals::joyhat = p_event.jhat.value;
+    }
+    else if (p_event.type==SDL_JOYBUTTONDOWN) {
+      keystate = Globals::btn2key[p_event.jbutton.button];
+    }
+    else if (p_event.type == SDL_KEYDOWN) {
+      keystate = p_event.key.keysym.sym;
+    }
+	switch (keystate)
     {
         case MYKEY_PARENT:
             // B => Cancel
@@ -262,6 +277,18 @@ const bool CKeyboard::keyPress(const SDL_Event &p_event)
 const bool CKeyboard::keyHold(void)
 {
     bool l_ret(false);
+    if ((Globals::joyhat & 1) && tick(SDL_JoystickGetHat(Globals::joy,0) & SDL_HAT_UP)) {
+      l_ret = moveCursorUp(false);
+    }
+    if ((Globals::joyhat & 2) && tick(SDL_JoystickGetHat(Globals::joy,0) & SDL_HAT_RIGHT)) {
+      l_ret = moveCursorRight(false);
+    }
+    if ((Globals::joyhat & 4) && tick(SDL_JoystickGetHat(Globals::joy,0) & SDL_HAT_DOWN)) {
+      l_ret = moveCursorDown(false);
+    }
+    if ((Globals::joyhat & 8) && tick(SDL_JoystickGetHat(Globals::joy,0) & SDL_HAT_LEFT)) {
+      l_ret = moveCursorLeft(false);
+    }
     switch(m_lastPressed)
     {
         case MYKEY_UP:
@@ -282,17 +309,17 @@ const bool CKeyboard::keyHold(void)
             break;
         case MYKEY_OPEN:
             // A => Add letter
-            if (tick(SDL_GetKeyState(NULL)[MYKEY_OPEN]))
+            if ((SDL_GetKeyState(NULL)[MYKEY_OPEN] || SDL_JoystickGetButton(Globals::joy, 0)) && tick(1))
                 l_ret = type();
             break;
         case MYKEY_SYSTEM:
             // Y => Backspace
-            if (tick(SDL_GetKeyState(NULL)[MYKEY_SYSTEM]))
+            if ((SDL_GetKeyState(NULL)[MYKEY_SYSTEM] || SDL_JoystickGetButton(Globals::joy, 3)) && tick(1))
                 l_ret = backspace();
             break;
         case MYKEY_OPERATION:
             // X => Space
-            if (tick(SDL_GetKeyState(NULL)[MYKEY_OPERATION]))
+            if ((SDL_GetKeyState(NULL)[MYKEY_OPERATION] || SDL_JoystickGetButton(Globals::joy, 2)) && tick(1))
                 l_ret = type(" ");
             break;
         default:

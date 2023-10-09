@@ -11,12 +11,35 @@
 SDL_Surface *Globals::g_screen = NULL;
 #if defined(PLATFORM_MIYOOMINI) || defined(PLATFORM_RG35XX)
 SDL_Surface *Globals::g_scaled = NULL;
+SDL_Joystick *Globals::joy = NULL;
+int Globals::joyhat = 0;
 #endif
 const SDL_Color Globals::g_colorTextNormal = {COLOR_TEXT_NORMAL};
 const SDL_Color Globals::g_colorTextTitle = {COLOR_TEXT_TITLE};
 const SDL_Color Globals::g_colorTextDir = {COLOR_TEXT_DIR};
 const SDL_Color Globals::g_colorTextSelected = {COLOR_TEXT_SELECTED};
 std::vector<CWindow *> Globals::g_windows;
+const int Globals::hat2key[4] = {
+  MYKEY_UP,
+  MYKEY_RIGHT,
+  MYKEY_DOWN,
+  MYKEY_LEFT
+};
+const int Globals::btn2key[12] = {
+  MYKEY_OPEN,
+  MYKEY_PARENT,
+  MYKEY_OPERATION,
+  MYKEY_SYSTEM,
+  0,
+  MYKEY_PAGEUP,
+  MYKEY_PAGEDOWN,
+  MYKEY_SELECT,
+  MYKEY_TRANSFER,
+  MYKEY_MENU,
+  0,
+  0
+};
+
 
 int main(int argc, char** argv)
 {
@@ -32,11 +55,12 @@ int main(int argc, char** argv)
 #endif
 	
     // Init SDL
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_JOYSTICK|SDL_INIT_VIDEO);
+    Globals::joy = SDL_JoystickOpen(0);
 
     // Hide cursor
     SDL_ShowCursor(SDL_DISABLE);
-	SDL_EnableKeyRepeat(300,100);
+	SDL_EnableKeyRepeat(150,50);
 
     // Screen
 #if defined(PLATFORM_MIYOOMINI) || defined(PLATFORM_RG35XX)

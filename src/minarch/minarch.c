@@ -611,9 +611,9 @@ typedef struct ButtonMapping {
 
 static ButtonMapping default_button_mapping[] = { // used if pak.cfg doesn't exist or doesn't have bindings
 	{"Up",			RETRO_DEVICE_ID_JOYPAD_UP,		BTN_ID_UP},
+	{"Right",		RETRO_DEVICE_ID_JOYPAD_RIGHT,	BTN_ID_RIGHT},
 	{"Down",		RETRO_DEVICE_ID_JOYPAD_DOWN,	BTN_ID_DOWN},
 	{"Left",		RETRO_DEVICE_ID_JOYPAD_LEFT,	BTN_ID_LEFT},
-	{"Right",		RETRO_DEVICE_ID_JOYPAD_RIGHT,	BTN_ID_RIGHT},
 	{"A Button",	RETRO_DEVICE_ID_JOYPAD_A,		BTN_ID_A},
 	{"B Button",	RETRO_DEVICE_ID_JOYPAD_B,		BTN_ID_B},
 	{"X Button",	RETRO_DEVICE_ID_JOYPAD_X,		BTN_ID_X},
@@ -631,9 +631,9 @@ static ButtonMapping default_button_mapping[] = { // used if pak.cfg doesn't exi
 static ButtonMapping button_label_mapping[] = { // used to lookup the retro_id and local btn_id from button name
 	{"NONE",	-1,								BTN_ID_NONE},
 	{"UP",		RETRO_DEVICE_ID_JOYPAD_UP,		BTN_ID_UP},
+	{"RIGHT",	RETRO_DEVICE_ID_JOYPAD_RIGHT,	BTN_ID_RIGHT},
 	{"DOWN",	RETRO_DEVICE_ID_JOYPAD_DOWN,	BTN_ID_DOWN},
 	{"LEFT",	RETRO_DEVICE_ID_JOYPAD_LEFT,	BTN_ID_LEFT},
-	{"RIGHT",	RETRO_DEVICE_ID_JOYPAD_RIGHT,	BTN_ID_RIGHT},
 	{"A",		RETRO_DEVICE_ID_JOYPAD_A,		BTN_ID_A},
 	{"B",		RETRO_DEVICE_ID_JOYPAD_B,		BTN_ID_B},
 	{"X",		RETRO_DEVICE_ID_JOYPAD_X,		BTN_ID_X},
@@ -652,9 +652,9 @@ static ButtonMapping core_button_mapping[RETRO_BUTTON_COUNT+1] = {0};
 
 static const char* device_button_names[LOCAL_BUTTON_COUNT] = {
 	[BTN_ID_UP]		= "UP",
+	[BTN_ID_RIGHT]	= "RIGHT",
 	[BTN_ID_DOWN]	= "DOWN",
 	[BTN_ID_LEFT]	= "LEFT",
-	[BTN_ID_RIGHT]	= "RIGHT",
 	[BTN_ID_SELECT]	= "SELECT",
 	[BTN_ID_START]	= "START",
 	[BTN_ID_Y]		= "Y",
@@ -672,9 +672,9 @@ static const char* device_button_names[LOCAL_BUTTON_COUNT] = {
 static char* button_labels[] = {
 	"NONE", // displayed by default
 	"UP",
+	"RIGHT",
 	"DOWN",
 	"LEFT",
-	"RIGHT",
 	"A",
 	"B",
 	"X",
@@ -690,9 +690,9 @@ static char* button_labels[] = {
 static char* shortcut_labels[] = {
 	"NONE", // displayed by default
 	"UP",
+	"RIGHT",
 	"DOWN",
 	"LEFT",
-	"RIGHT",
 	"A",
 	"B",
 	"X",

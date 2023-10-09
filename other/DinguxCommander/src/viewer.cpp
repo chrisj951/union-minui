@@ -96,7 +96,22 @@ const bool CViewer::keyPress(const SDL_Event &p_event)
 {
     CWindow::keyPress(p_event);
     bool l_ret(false);
-	switch (p_event.key.keysym.sym)
+    int keystate = -1;
+    if (p_event.type == SDL_JOYHATMOTION) {
+      for (int i = 0; i < 4; i++) {
+        if (p_event.jhat.value & (1 << i) && (~Globals::joyhat & (1 << i))) {
+          keystate = Globals::hat2key[i];
+        }
+      }
+      Globals::joyhat = p_event.jhat.value;
+    }
+    else if (p_event.type==SDL_JOYBUTTONDOWN) {
+      keystate = Globals::btn2key[p_event.jbutton.button];
+    }
+    else if (p_event.type == SDL_KEYDOWN) {
+      keystate = p_event.key.keysym.sym;
+    }
+	switch (keystate)
     {
         case MYKEY_PARENT:
         case MYKEY_MENU:
@@ -131,6 +146,12 @@ const bool CViewer::keyPress(const SDL_Event &p_event)
 const bool CViewer::keyHold(void)
 {
     bool l_ret(false);
+    if ((Globals::joyhat & 1) && tick(SDL_JoystickGetHat(Globals::joy,0) & SDL_HAT_UP)) {
+      l_ret = moveUp(1);
+    }
+    if ((Globals::joyhat & 4) && tick(SDL_JoystickGetHat(Globals::joy,0) & SDL_HAT_DOWN)) {
+      l_ret = moveDown(1);
+    }
     switch(m_lastPressed)
     {
         case MYKEY_UP:
@@ -142,11 +163,11 @@ const bool CViewer::keyHold(void)
                 l_ret = moveDown(1);
             break;
         case MYKEY_PAGEUP:
-            if (tick(SDL_GetKeyState(NULL)[MYKEY_PAGEUP]))
+            if ((SDL_GetKeyState(NULL)[MYKEY_PAGEUP] || SDL_JoystickGetButton(Globals::joy, 5)) && tick(1))
                 l_ret = moveUp(VIEWER_NB_LINES - 1);
             break;
         case MYKEY_PAGEDOWN:
-            if (tick(SDL_GetKeyState(NULL)[MYKEY_PAGEDOWN]))
+            if ((SDL_GetKeyState(NULL)[MYKEY_PAGEDOWN] || SDL_JoystickGetButton(Globals::joy, 6)) && tick(1))
                 l_ret = moveDown(VIEWER_NB_LINES - 1);
             break;
         case MYKEY_LEFT:
