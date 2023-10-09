@@ -1,0 +1,22 @@
+./drastic: /mnt/sdcard/Emus/rg35xx/NDS.pak/drastic/libs/libasound.so.2: no version information available (required by ./drastic)
+./drastic: /mnt/sdcard/Emus/rg35xx/NDS.pak/drastic/libs/libasound.so.2: no version information available (required by ./drastic)
+(*) DirectFB/Core: Single Application Core. (2023-09-30 00:59) 
+(*) DirectFB/Core: Synchronize data on disk with memory
+(*) FBDev/System: Using device /dev/fb0 (default)
+(*) FBDev/System: Don't use VT handling
+(*) FBDev/System: Found 'owlfb' (ID 0) with framebuffer at 0x0be0c000, 2400k (MMIO 0x00000000, 0k)
+(*) Direct/Modules: Suppress module 'linux_input'
+(*) DirectFB/Genefx: NEON enabled
+(*) DirectFB/Graphics: Genefx Software Rasterizer 0.7 (DirectFB)
+(*) FBDev/Screen: Default mode is 640x480 (1 modes in total)
+(*) DirectFB/Core/WM: Default 0.3 (DirectFB)
+(*) FBDev/Mode: Setting 640x480 RGB16
+(*) FBDev/Mode: Switched to 640x480 (virtual 640x480) at 16 bits (RGB16), pitch 1280
+(*) FBDev/Mode: Setting 640x480 RGB16
+(*) FBDev/Mode: Switched to 640x480 (virtual 640x480) at 16 bits (RGB16), pitch 1280
+ALSA lib conf.c:4542:(_snd_config_evaluate) symbol snd_func_private_integer is not defined inside (null)
+ALSA lib conf.c:5033:(snd_config_expand) Evaluate error: No such device or address
+ALSA lib conf.c:3680:(snd_config_hook_load) Unable to expand filenames in the pre-load section
+ALSA lib conf.c:3558:(snd_config_hooks_call) function snd_config_hook_load_for_all_cards returned error: No such device or address
+(*) FBDev/Mode: Setting 640x480 RGB16
+(*) FBDev/Mode: Switched to 640x480 (virtual 640x480) at 16 bits (RGB16), pitch 1280

@@ -58,6 +58,10 @@ on top of MinUI.
 		(The correct size must be used, 280x280 being ideal
 		in my testing)
 	-	Images go into ROMS/<console>/images/<game name>.png
+- Added Drastic build from XQuader
+- Now built ontop of GarlicOS to support NintendoDS using Percentnineteen's
+  patch to support the SDL updates (Copy MinUI on top of a GarlicOS card
+  instead of stock sdcard now)
 
 ## Development
 

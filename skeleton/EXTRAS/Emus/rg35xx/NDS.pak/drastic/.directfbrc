@@ -1,0 +1,12 @@
+system=fbdev
+module-dir=libs/directfb-2.0-0
+disable-module=linux_input
+mode=640x480
+depth=16
+pixelformat=RGB16
+buffer-mode=frontonly
+bg-color=000000
+no-banner
+no-cursor
+no-vt
+sync
