@@ -1567,8 +1567,8 @@ int main (int argc, char *argv[]) {
 								NULL, 
 								screen, 
 								&(SDL_Rect){
-									320,
-									80
+									0,
+									0
 								}
 							);
 							
